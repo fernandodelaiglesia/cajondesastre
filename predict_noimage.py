@@ -44,11 +44,24 @@ def predict(model_path, img_path, output_path, partition_num):
 
     config = model.get_config()
     textizer = DecodeOutput(config.label_map())
-    textized = textizer(output).get_predict().count()
-
+    #textized = textizer(output).get_predict().count()
+    textized = textizer(output).get_predict()
 
     print ("========================== textized OOOO==================")
-    print(textized)
+    #print type(textized),dir(textized)
+    #print textizer(output).get_predict().count()
+
+    rdd2 = textized.map(lambda x: (x[0], max(x[1][0], key=lambda y: y[1])))
+    printable = rdd2.collect()
+    for i in range(len(printable)):
+        print "Elemento ", printable[i][0]," valor: ",printable[i][1]
+
+    #quecosas = sorted(textized.first()[1][0],key=lambda x:x[1], reverse=True)
+    #print(quecosas[0],quecosas[1],quecosas[3])
+
+    #rdd2 = textized.flatMapValues(lambda x : [ (k, x[k]) for k in x.keys()])
+    #rdd2.map(lambda x : (x[0], x[1][0], x[1][1], x[1][2])).toDF(("Image", "Object", "Score","Algo")).show()
+    #print rdd2.take(4).map(lambda x : (x[0], x[1][0], x[1][1], x[1][2]))
 
 
 ### Test ###    visualizer = Visualizer(config.label_map(), encoding="jpg")
@@ -63,5 +76,4 @@ def predict(model_path, img_path, output_path, partition_num):
 if __name__ == "__main__":
     args = parser.parse_args()
     predict(args.model_path, args.img_path, args.output_path, args.partition_num)
-
 
