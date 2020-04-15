@@ -1,0 +1,114 @@
+
+apiVersion: types.kubefed.io/v1beta1
+kind: FederatedNamespace
+metadata:
+  name: federated-vote
+  namespace: federated-vote
+spec:
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
+---
+apiVersion: types.fubefed.io/v1beta
+kind: FederatedDeployment
+metadata:
+  name: azure-vote-back
+  namespace: federated-vote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-back
+  template:
+    metadata:
+      labels:
+        app: azure-vote-back
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: azure-vote-back
+        image: redis
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 6379
+          name: redis
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
+---
+apiVersion: types.fubefed.io/v1beta
+kind: FederatedService
+metadata:
+  name: azure-vote-back
+  namespace: federated-vote
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: azure-vote-back
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
+---
+apiVersion: types.fubefed.io/v1beta
+kind: FederatedDeployment
+metadata:
+  name: azure-vote-front
+  namespace: federated-vote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-front
+  template:
+    metadata:
+      labels:
+        app: azure-vote-front
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: azure-vote-front
+        image: microsoft/azure-vote-front:v1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: REDIS
+          value: "azure-vote-back"
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
+---
+apiVersion: types.fubefed.io/v1beta
+kind: FederatedService
+metadata:
+  name: azure-vote-front
+  namespace: federated-vote
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: azure-vote-front
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
