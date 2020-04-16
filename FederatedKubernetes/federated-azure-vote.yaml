@@ -1,16 +1,4 @@
-
 apiVersion: types.kubefed.io/v1beta1
-kind: FederatedNamespace
-metadata:
-  name: federated-vote
-  namespace: federated-vote
-spec:
-  placement:
-    clusters:
-    - name: aws1
-    - name: azure1
----
-apiVersion: types.fubefed.io/v1beta
 kind: FederatedDeployment
 metadata:
   name: azure-vote-back
@@ -45,7 +33,7 @@ spec:
     - name: aws1
     - name: azure1
 ---
-apiVersion: types.fubefed.io/v1beta
+apiVersion: types.kubefed.io/v1beta1
 kind: FederatedService
 metadata:
   name: azure-vote-back
@@ -60,7 +48,7 @@ spec:
     - name: aws1
     - name: azure1
 ---
-apiVersion: types.fubefed.io/v1beta
+apiVersion: types.kubefed.io/v1beta1
 kind: FederatedDeployment
 metadata:
   name: azure-vote-front
@@ -97,7 +85,7 @@ spec:
     - name: aws1
     - name: azure1
 ---
-apiVersion: types.fubefed.io/v1beta
+apiVersion: types.kubefed.io/v1beta1
 kind: FederatedService
 metadata:
   name: azure-vote-front

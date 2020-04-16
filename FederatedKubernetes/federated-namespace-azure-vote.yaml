@@ -1,0 +1,12 @@
+apiVersion: types.kubefed.io/v1beta1
+kind: FederatedNamespace
+metadata:
+  name: federated-vote
+  namespace: federated-vote
+spec:
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
+---
+
