@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-test
+---
+apiVersion: types.kubefed.io/v1beta1
+kind: FederatedNamespace
+metadata:
+  name: nginx-test
+  namespace: nginx-test
+spec:
+  placement:
+    clusters:
+    - name: aws1
+    - name: azure1
