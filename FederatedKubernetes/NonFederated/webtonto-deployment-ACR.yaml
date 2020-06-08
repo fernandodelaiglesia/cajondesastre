@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webtonto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webtonto
+  template:
+    metadata:
+      labels:
+        app: webtonto
+    spec:
+      containers:
+      - name: webtonto
+        image: fernandoregistry.azurecr.io/httpd
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: webtonto
+      imagePullSecrets:
+      - name: fernandoregistry-local
+
