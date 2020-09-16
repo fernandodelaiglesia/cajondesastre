@@ -1,0 +1,17 @@
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: federate
+        metrics_path: /federate
+        scrape_interval: 1m
+        scrape_timeout: 55s
+        honor_labels: true
+        params:
+          'match[]':
+            - '{namespace="azure-vote"}'
+        static_configs:
+          - targets:
+              - "ladireccionipdelingress"
+        basic_auth:
+          username: 'fernando'
+          password: 'barylodemasquetienesquecambiar'
