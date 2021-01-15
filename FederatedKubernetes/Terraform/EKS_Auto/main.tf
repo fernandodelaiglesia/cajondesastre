@@ -95,7 +95,7 @@ module "vpc" {
   enable_nat_gateway   = true
   single_nat_gateway   = true
   enable_dns_hostnames = true
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   public_subnet_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
@@ -111,7 +111,8 @@ module "vpc" {
 module "eks" {
   source       = "terraform-aws-modules/eks/aws"
   cluster_name = local.cluster_name
-  subnets      = module.vpc.private_subnets
+  cluster_version = "1.18"
+  subnets      = module.vpc.public_subnets
 
   tags = {
     Environment = "test"
